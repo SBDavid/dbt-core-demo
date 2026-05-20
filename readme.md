@@ -17,10 +17,19 @@
 ## 安装 dbt 适配器
 安装适配器会自动安装 dbt-core。
 安装之前可以先关闭代理。
+可以在虚拟环境中关闭，`env/bin/activate`
 
 - 安装: `python -m pip install dbt-duckdb`
+- 安装：`python -m pip install dbt-postgres`
 - 升级：`python -m pip install --upgrade dbt-duckdb`
 - 指定版本：`python -m pip install --upgrade dbt-core==1.9`
+
+## 数据库安装
+- `Postgres.app`
+  - 默认端口：5432
+  - 用户名：jiawei.tang
+  - 修改密码：`jiawei.tang" WITH PASSWORD '123456'`
+- 新建数据库：`CREATE DATABASE my_new_db;`
 
 # dbt 项目
 ## 构建项目
