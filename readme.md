@@ -106,3 +106,4 @@ models:
                 to: ref('stg_customers')
                 field: customer_id
 ```
+- 导入 csv：`dbt seed --select raw_naaim`
