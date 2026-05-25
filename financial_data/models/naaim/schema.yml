@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_naaim
+    description: "Cleans raw NAAIM exposure index seed data: parses dates and casts numeric fields."
+    columns:
+      - name: report_date
+        description: "Weekly survey report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: naaim_number
+        description: "NAAIM Exposure Index (mean net exposure %)."
+        data_tests:
+          - not_null
+
+  - name: fct_naaim
+    description: "NAAIM exposure index fact table with sentiment zone and week-over-week changes."
+    columns:
+      - name: report_date
+        description: "Primary key — weekly report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: exposure_zone
+        description: "Sentiment bucket from NAAIM number (<50 bearish, 50–100 long, >100 leveraged long)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['bearish', 'long', 'leveraged_long']
+
+  - name: naaim_percentile_5y
+    description: >
+      Latest 100 weekly NAAIM mean_average readings, each annotated with its
+      rolling percent_rank within the 5 years prior to that row's report_date.
+      Useful for gauging how extreme the current sentiment reading is relative
+      to recent history.
+    columns:
+      - name: report_date
+        description: "Primary key — weekly survey report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: mean_average
+        description: "Mean average NAAIM equity exposure across survey respondents (%)."
+        data_tests:
+          - not_null
+      - name: mean_average_percentile_5y
+        description: >
+          Rolling percent_rank (0–1) of mean_average within the 5-year window
+          ending on report_date. Computed as:
+          count(rows with mean_average < current) / (total rows in window - 1).
+          A value of 1.0 means the highest reading in the past 5 years;
+          0.0 means the lowest.
+        data_tests:
+          - not_null

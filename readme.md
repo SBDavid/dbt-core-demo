@@ -2,6 +2,7 @@
 
 - installation：[https://docs.getdbt.com/docs/local/install-dbt?version=1.13#installation](https://docs.getdbt.com/docs/local/install-dbt?version=1.13#installation)
 - https://docs.getdbt.com/docs/local/install-dbt?version=1.13#create-a-project
+- https://docs.getdbt.com/guides/manual-install?step=1&version=1.13
 
 # 环境配置
 ## python
@@ -59,51 +60,29 @@ jaffle_shop:
   - 测试链接：`dbt debug`
 
 ## dbt 命令
-- dbt run：编译 sql ，更新表
-- dbt test：测试，models/schema.yml 中的描述来测试
-```yml
-version: 2
 
-models:
-  - name: customers
-    description: One record per customer
-    columns:
-      - name: customer_id
-        description: Primary key
-        data_tests:
-          - unique
-          - not_null
-      - name: first_order_date
-        description: NULL when a customer has not yet placed an order.
-
-  - name: stg_customers
-    description: This model cleans up customer data
-    columns:
-      - name: customer_id
-        description: Primary key
-        data_tests:
-          - unique
-          - not_null
-
-  - name: stg_orders
-    description: This model cleans up order data
-    columns:
-      - name: order_id
-        description: Primary key
-        data_tests:
-          - unique
-          - not_null
-      - name: status
-        data_tests:
-          - accepted_values:
-              arguments: # available in v1.10.5 and higher. Older versions can set the <argument_name> as the top-level property.
-                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
-      - name: customer_id
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_customers')
-                field: customer_id
-```
+### 导入数据
 - 导入 csv：`dbt seed --select raw_naaim`
+
+### 构建模型（中间清洗层）
+- stg_naaim 模型：完成初步数据转换
+  - 转换日期字段
+  - 删除空数据
+  - 指定字段的数据类型
+
+### 编写文档和测试（中间清洗层）
+- schema.yml：
+  - 对重要的字段做出说明
+  - 对重要的字段编写测试
+- 运行测试
+  - `cd xxx/dbt-core-demo/financial_data`
+  - `dbt test --select stg_naaim 2>&1`
+
+### 构建事实表的模型
+- fct_naaim.sql
+  - 为环比数据添加基础数据：prior_naaim_number、naaim_wow_change
+
+### 编译 sql ，更新表
+- `dbt run --select stg_naaim          # 只跑 staging`
+- `dbt run --select +fct_naaim         # 跑事实表及其上游`
+- `dbt run --select +naaim_percentile_5y`
