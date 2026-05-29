@@ -30,7 +30,7 @@
   - 默认端口：5432
   - 用户名：jiawei.tang
   - 修改密码：`jiawei.tang" WITH PASSWORD '123456'`
-- 新建数据库：`CREATE DATABASE my_new_db;`
+- 新建数据库：`CREATE DATABASE financial_data;`
 
 # dbt 项目
 ## 构建项目
@@ -56,6 +56,21 @@ jaffle_shop:
       threads: 4
 
   target: dev # 默认的使用 dev
+
+financial_data: # financial_data/dbt_project.yml 中 profile: financial_data
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      port: 5432
+      user: jiaweitang
+      password: '123456' # 与上文 Postgres.app 中设置的密码一致
+      dbname: financial_data
+      schema: dbt-dev
+      threads: 1
+
+  target: dev
+
 ```
   - 测试链接：`dbt debug`
 
