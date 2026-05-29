@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_sentiment
+    description: "Cleans raw AAII sentiment survey seed data: parses dates and casts percentage fields to numeric."
+    columns:
+      - name: report_date
+        description: "Weekly survey report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: bullish
+        description: "Percentage of respondents with bullish outlook."
+        data_tests:
+          - not_null
+      - name: neutral
+        description: "Percentage of respondents with neutral outlook."
+        data_tests:
+          - not_null
+      - name: bearish
+        description: "Percentage of respondents with bearish outlook."
+        data_tests:
+          - not_null
+
+  - name: fct_sentiment
+    description: "AAII sentiment fact table with bull-bear spread, sentiment zone, and week-over-week changes."
+    columns:
+      - name: report_date
+        description: "Primary key — weekly survey report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: bull_bear_spread
+        description: "Bullish minus bearish percentage. Positive = net bullish, negative = net bearish."
+        data_tests:
+          - not_null
+      - name: sentiment_zone
+        description: "Sentiment bucket based on bull-bear spread (>15% bullish, <-15% bearish, else neutral)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['bullish', 'bearish', 'neutral']

@@ -38,3 +38,7 @@ models:
       +materialized: view
       marts:
         +materialized: table
+    sentiment:
+      +materialized: view
+      marts:
+        +materialized: table

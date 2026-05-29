@@ -27,6 +27,7 @@ enriched as (
         naaim_number - lag(naaim_number) over (order by report_date) as naaim_wow_change,
         sp500_close - lag(sp500_close) over (order by report_date) as sp500_wow_change
     from staged
+    order by report_date
 
 )
 

@@ -1,6 +1,6 @@
 with base as (
 
-    select * from {{ ref('fct_naaim') }}
+    select * from {{ ref('fct_sentiment') }}
 
 ),
 
@@ -11,21 +11,21 @@ rolling_percentile as (
 
     select
         a.report_date,
-        a.mean_average,
+        a.bull_bear_spread,
         count(*) filter (
-            where b.mean_average < a.mean_average
+            where b.bull_bear_spread < a.bull_bear_spread
         )::numeric
-        / nullif(count(*) - 1, 0) as mean_average_percentile_5y
+        / nullif(count(*) - 1, 0) as bull_bear_spread_percentile_5y
     from base a
     join base b
         on b.report_date between a.report_date - interval '5 years' and a.report_date
-    group by a.report_date, a.mean_average
+    group by a.report_date, a.bull_bear_spread
 
 ),
 
 latest_100 as (
 
-    select report_date
+    select *
     from base
     order by report_date desc
     limit 100
@@ -34,8 +34,11 @@ latest_100 as (
 
 select
     p.report_date,
-    p.mean_average,
-    round(p.mean_average_percentile_5y, 4) as mean_average_percentile_5y
+    l.bullish,
+    l.neutral,
+    l.bearish,
+    l.bull_bear_spread,
+    round(p.bull_bear_spread_percentile_5y, 4) as bull_bear_spread_percentile_5y
 from rolling_percentile p
 inner join latest_100 l using (report_date)
 order by p.report_date
