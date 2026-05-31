@@ -20,10 +20,11 @@
 安装之前可以先关闭代理。
 可以在虚拟环境中关闭，`env/bin/activate`
 
-- 安装: `python -m pip install dbt-duckdb`
-- 安装：`python -m pip install dbt-postgres`
+- 安装数据库：`python -m pip install dbt-postgres`
 - 升级：`python -m pip install --upgrade dbt-duckdb`
 - 指定版本：`python -m pip install --upgrade dbt-core==1.9`
+- 安装其他python库
+  - `python -m pip install pandas yfinance`
 
 ## 数据库安装
 - `Postgres.app`

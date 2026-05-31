@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_cboe
+    description: "Cleans raw CBOE equity put/call ratio seed data: parses dates, casts ratio to numeric, and adds the inverse call/put ratio."
+    columns:
+      - name: report_date
+        description: "Daily trading date."
+        data_tests:
+          - not_null
+          - unique
+      - name: equity_put_call_ratio
+        description: "CBOE equity-only put/call ratio (puts divided by calls)."
+        data_tests:
+          - not_null
+      - name: equity_call_put_ratio
+        description: "Reciprocal of equity_put_call_ratio (calls divided by puts)."
+        data_tests:
+          - not_null
+
+  - name: fct_cboe
+    description: "CBOE equity put/call ratio fact table filtered to Fridays on or after 2020-01-01."
+    columns:
+      - name: report_date
+        description: "Primary key — Friday report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: equity_put_call_ratio
+        description: "CBOE equity-only put/call ratio (puts divided by calls)."
+        data_tests:
+          - not_null
+      - name: equity_call_put_ratio
+        description: "Reciprocal of equity_put_call_ratio (calls divided by puts)."
+        data_tests:
+          - not_null
+
+  - name: cboe_naaim_percentile_5y
+    description: >
+      Latest 100 weekly CBOE equity call/put ratio readings (Fridays on or after 2020),
+      each annotated with its rolling percent_rank within the 5 years prior to that
+      row's report_date. Useful for gauging how extreme the current options sentiment
+      reading is relative to recent history.
+    columns:
+      - name: report_date
+        description: "Primary key — Friday report date."
+        data_tests:
+          - not_null
+          - unique
+      - name: equity_put_call_ratio
+        description: "CBOE equity-only put/call ratio (puts divided by calls)."
+        data_tests:
+          - not_null
+      - name: equity_call_put_ratio
+        description: "Reciprocal of equity_put_call_ratio (calls divided by puts)."
+        data_tests:
+          - not_null
+      - name: equity_call_put_ratio_percentile_5y
+        description: >
+          Rolling percent_rank (0–1) of equity_call_put_ratio within the 5-year window
+          ending on report_date. Computed as:
+          count(rows with equity_call_put_ratio < current) / (total rows in window - 1).
+          A value of 1.0 means the highest reading in the past 5 years;
+          0.0 means the lowest.
+        data_tests:
+          - not_null
