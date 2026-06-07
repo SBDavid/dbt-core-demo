@@ -43,4 +43,10 @@ models:
       marts:
         +materialized: table
     cboe:
-      +materialized: table
+      +materialized: view
+      marts:
+        +materialized: table
+    pe_actuals:
+      +materialized: view
+      marts:
+        +materialized: table

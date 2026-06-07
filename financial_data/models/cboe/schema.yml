@@ -35,7 +35,7 @@ models:
         data_tests:
           - not_null
 
-  - name: cboe_naaim_percentile_5y
+  - name: cboe_percentile_5y
     description: >
       Latest 100 weekly CBOE equity call/put ratio readings (Fridays on or after 2020),
       each annotated with its rolling percent_rank within the 5 years prior to that

@@ -39,4 +39,5 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              values: ['bullish', 'bearish', 'neutral']
+              arguments:
+                values: ['bullish', 'bearish', 'neutral']

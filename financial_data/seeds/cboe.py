@@ -4,7 +4,7 @@ from pathlib import Path
 
 SEED_DIR = Path(__file__).parent
 JSON_PATH = SEED_DIR / "cboe.json"
-CSV_PATH = SEED_DIR / "cboe_source.csv"
+CSV_PATH = SEED_DIR / "raw_cboe.csv"
 
 
 def main() -> None:
