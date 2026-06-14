@@ -19,10 +19,10 @@ models:
           - not_null
 
   - name: fct_cboe
-    description: "CBOE equity put/call ratio fact table filtered to Fridays on or after 2020-01-01."
+    description: "CBOE equity put/call ratio fact table: Fridays on or after 2020-01-01, plus the latest report date."
     columns:
       - name: report_date
-        description: "Primary key — Friday report date."
+        description: "Primary key — Friday report date, or the latest available date if not yet a Friday."
         data_tests:
           - not_null
           - unique
