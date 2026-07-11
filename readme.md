@@ -101,4 +101,4 @@ financial_data: # financial_data/dbt_project.yml 中 profile: financial_data
 ### 编译 sql ，更新表
 - `dbt run --select stg_naaim          # 只跑 staging`
 - `dbt run --select +fct_naaim         # 跑事实表及其上游`
-- `dbt run --select +naaim_percentile_5y`
+- `dbt run --select +biz_naaim_percentile_5y`
