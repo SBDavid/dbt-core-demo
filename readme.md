@@ -102,3 +102,14 @@ financial_data: # financial_data/dbt_project.yml 中 profile: financial_data
 - `dbt run --select stg_naaim          # 只跑 staging`
 - `dbt run --select +fct_naaim         # 跑事实表及其上游`
 - `dbt run --select +biz_naaim_percentile_5y`
+
+## 第4版本脚本
+source env/bin/activate
+cd financial_data
+
+dbt seed --select raw_sentiment
+dbt run --select +biz_sentiment_percentile_5y
+
+python '/Users/jiaweitang/002-learn/dbt-core-demo/financial_data/seeds/cboe.py'
+dbt seed --select raw_cboe
+dbt run --select +biz_cboe_percentile_5y
